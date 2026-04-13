@@ -1,386 +1,417 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const PlantStoreApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PlantStoreApp extends StatelessWidget {
+  const PlantStoreApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Gansss.com',
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color(0xFFF2F3F5),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32)),
+      ),
+      home: const PlantStoreHomePage(),
+    );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class PlantStoreHomePage extends StatefulWidget {
+  const PlantStoreHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<PlantStoreHomePage> createState() => _PlantStoreHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PlantStoreHomePageState extends State<PlantStoreHomePage> {
+  final List<ProductItem> _products = const [
+    ProductItem(
+      name: 'Monstera Deliciosa',
+      unitPrice: 75000,
+      imageAsset: 'assets/images/tanaman_1.jpg',
+    ),
+    ProductItem(
+      name: 'Kaktus Mini Pot',
+      unitPrice: 32000,
+      imageAsset: 'assets/images/tanaman_2.jpg',
+    ),
+    ProductItem(
+      name: 'Lidah Mertua',
+      unitPrice: 48000,
+      imageAsset: 'assets/images/tanaman_3.jpg',
+    ),
+    ProductItem(
+      name: 'Peace Lily',
+      unitPrice: 65000,
+      imageAsset: 'assets/images/tanaman_4.jpg',
+    ),
+    ProductItem(
+      name: 'Calathea Orbifolia',
+      unitPrice: 88000,
+      imageAsset: 'assets/images/tanaman_5.jpg',
+    ),
+    ProductItem(
+      name: 'Sirih Gading',
+      unitPrice: 42000,
+      imageAsset: 'assets/images/tanaman_6.jpg',
+    ),
+  ];
+
+  final List<String> _categories = const [
+    'Indoor',
+    'Outdoor',
+    'Succulent',
+    'Hias Daun',
+    'Paket Pot',
+  ];
+
+  late final List<int> _quantities;
+
+  @override
+  void initState() {
+    super.initState();
+    _quantities = List<int>.filled(_products.length, 0);
+  }
+
+  void _incrementQuantity(int index) {
+    setState(() {
+      _quantities[index] = _quantities[index] + 1;
+    });
+  }
+
+  void _decrementQuantity(int index) {
+    if (_quantities[index] == 0) {
+      return;
+    }
+
+    setState(() {
+      _quantities[index] = _quantities[index] - 1;
+    });
+  }
+
+  int get _selectedItemCount {
+    return _quantities.fold(0, (sum, qty) => sum + qty);
+  }
+
+  int get _cartTotalPrice {
+    int total = 0;
+    for (int i = 0; i < _products.length; i++) {
+      total += _products[i].unitPrice * _quantities[i];
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red,
-        leading: const Icon(Icons.home),
-        title: const Text("Aplikasi Ter Gokil Se-Asia Tenggara"),
+        backgroundColor: const Color(0xFFFF5A1F),
+        foregroundColor: Colors.white,
+        title: const Text(
+          'Toko TanamanKu',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Colors.red, width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: const [
-                  Icon(
-                    Icons.airline_seat_flat_sharp,
-                    size: 40.0,
-                    color: Color.fromARGB(255, 2, 61, 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              color: const Color(0xFFEDEDED),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: const Row(
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    backgroundImage: AssetImage('assets/images/ayam.png'),
                   ),
-                  Text(
-                    "Artikel Baru",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                      fontStyle: FontStyle.normal,
-                      letterSpacing: 1.0,
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Hai Jhon, Selamat Datang!',
+                      style: TextStyle(
+                        fontSize: 28 / 2,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
               ),
-              Card(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/images/ayam.png',
-                      height: 150,
-                      fit: BoxFit.cover,
+            ),
+            Container(
+              height: 230,
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 12),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset('assets/images/ayam.png', fit: BoxFit.cover),
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xAA0D3B18), Color(0x330D3B18)],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                      ),
                     ),
-                    const SizedBox(height: 15),
-                    const Text(
-                      "Geger! Ayam Goreng di Depok Mendadak Hidup Lagi...",
+                  ),
+                  const Positioned(
+                    left: 16,
+                    bottom: 16,
+                    child: Text(
+                      'FLASH SALE TANAMAN\nUP TO 70%',
                       style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontStyle: FontStyle.normal,
-                        letterSpacing: 1.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 34 / 2,
+                        height: 1.25,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        "Warga Depok kembali dikejutkan oleh kejadian di luar nalar. Sebuah paha ayam goreng tepung yang sudah siap santap di atas meja makan mendadak berdiri tegak dan melakukan gerakan pemanasan. Menurut saksi mata, ayam tersebut menolak dimakan dan justru menuntut diberikan helm bogo serta jaket hijau karena merasa terpanggil untuk mengejar target poin harian sebagai driver ojol. 'Tadi pas mau saya gigit, dia bilang: Sabar pak, lagi ada orderan ke Bekasi!', ujar pemilik rumah yang masih gemetaran sambil memegang garpu. Hingga berita ini diturunkan, ayam goreng tersebut dilaporkan sedang terjebak macet di daerah Margonda dan menolak dicocol sambal karena alasan profesionalitas kerja. [Baca Selengkapnya]",
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(fontSize: 14, color: Colors.black87),
-                      ),
-                    ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+              child: Text(
+                '::= Kategori Produk',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontSize: 30 / 2,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF2D2D2D),
                 ),
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: const [
-                  Text(
-                    'Komentar (7)',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: _categories
+                    .map((category) => CategoryChip(label: category))
+                    .toList(),
               ),
-              ListView(
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+              child: GridView.builder(
+                itemCount: _products.length,
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.58,
+                ),
+                itemBuilder: (context, index) {
+                  return ProductCard(
+                    product: _products[index],
+                    quantity: _quantities[index],
+                    onAdd: () => _incrementQuantity(index),
+                    onRemove: () => _decrementQuantity(index),
+                  );
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(8, 8, 8, 18),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(height: 10),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "mR HILMI a.k.a Rektor GANS",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Edan Pisun!! Ayamnya bisa ngomong, bisa ngojek lagi. Mantap jiwa! 🤣",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Text(
+                    'Total Item: $_selectedItemCount',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2D2D2D),
                     ),
                   ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "User@12358072001",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Baca selengkapnya gak bisa di klik woyyyyy!!!",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "Superman vs Prabowo",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "APLIKASI SAMPAH!!! GABISA KLIK APA APA!! T4!",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "fufufafa",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "HIDUPPP JOKOWIII !!!!",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "Jam_Kosong123",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Berita hoak",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "Hafilalibaslas",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Ngomongin apa sihh",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.person,
-                                size: 20,
-                                color: Color.fromARGB(255, 38, 168, 220),
-                              ),
-                              SizedBox(width: 3),
-                              Text(
-                                "Yudi Keling Jok Markojos",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 38, 168, 220),
-                                  fontStyle: FontStyle.normal,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Dasar WNI",
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Text(
+                    'Total: ${formatRupiah(_cartTotalPrice)}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF1E8D3E),
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class CategoryChip extends StatelessWidget {
+  const CategoryChip({required this.label, super.key});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFF5A1F),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class ProductCard extends StatelessWidget {
+  const ProductCard({
+    required this.product,
+    required this.quantity,
+    required this.onAdd,
+    required this.onRemove,
+    super.key,
+  });
+
+  final ProductItem product;
+  final int quantity;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final int totalPrice = product.unitPrice * quantity;
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 1.5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Image.asset(
+              product.imageAsset,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 6),
+            child: Text(
+              product.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 16 / 1.08,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF2D2D2D),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              quantity == 0
+                  ? 'Harga: ${formatRupiah(product.unitPrice)}'
+                  : 'Harga: ${formatRupiah(totalPrice)}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF269A43),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 2, 10, 8),
+            child: Text(
+              'Jumlah: $quantity',
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xFF5A5A5A),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FilledButton.tonal(
+                    onPressed: quantity == 0 ? null : onRemove,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(34),
+                      backgroundColor: const Color(0xFFE8F4EA),
+                    ),
+                    child: const Icon(
+                      Icons.remove,
+                      size: 18,
+                      color: Color(0xFF1B5E20),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: onAdd,
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(34),
+                      backgroundColor: const Color(0xFF2E9B4C),
+                    ),
+                    child: const Icon(Icons.add, size: 18, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ProductItem {
+  const ProductItem({
+    required this.name,
+    required this.unitPrice,
+    required this.imageAsset,
+  });
+
+  final String name;
+  final int unitPrice;
+  final String imageAsset;
+}
+
+String formatRupiah(int value) {
+  final String source = value.toString();
+  final List<String> chars = source.split('').reversed.toList();
+  final StringBuffer formatted = StringBuffer();
+
+  for (int i = 0; i < chars.length; i++) {
+    if (i > 0 && i % 3 == 0) {
+      formatted.write('.');
+    }
+    formatted.write(chars[i]);
+  }
+
+  final String result = formatted.toString().split('').reversed.join();
+  return 'Rp. $result';
 }
